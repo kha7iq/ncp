@@ -16,7 +16,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type flagsDir struct {
+type nfsFlags struct {
 	inputPath      string
 	nfsHost        string
 	nfsMountFolder string
@@ -24,7 +24,7 @@ type flagsDir struct {
 
 // ToServer function provides functionaltiy to transfer files or folders from local filesystem to NFS server.
 func ToServer() *cli.Command {
-	var nfsOpts flagsDir
+	var nfsOpts nfsFlags
 	return &cli.Command{
 		Name: "to",
 		// Aliases: []string{"d"},
@@ -105,6 +105,8 @@ func checkMark() func() {
 	}
 }
 
+// isDirectory takes a path strings and check the attirbutes if givin path
+// is a dirctory or not
 func isDirectory(path string) (bool, error) {
 	info, err := os.Stat(path)
 	if err != nil {
@@ -113,6 +115,7 @@ func isDirectory(path string) (bool, error) {
 	return info.IsDir(), nil
 }
 
+// listFileAndFolders take a directory path and returns a slice containng files and another containing folders
 func getFoldersAndFiles(path string, basePath string) ([]string, []string, error) {
 	var folders []string
 	var files []string
@@ -169,6 +172,7 @@ func getFoldersAndFiles(path string, basePath string) ([]string, []string, error
 	return folders, files, nil
 }
 
+// transferFile will take a source file path and target file path and transfer file
 func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	sourceFile, err := os.Open(srcfile)
