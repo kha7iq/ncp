@@ -207,7 +207,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 		progressbar.OptionEnableColorCodes(true),
 		progressbar.OptionSetTheme(theme),
 		progressbar.OptionSetDescription("Copying"+" "+"[green]"+srcfile+"[reset]"),
-		progressbar.OptionSetWidth(25),
+		progressbar.OptionSetWidth(20),
 		progressbar.OptionShowBytes(true),
 		progressbar.OptionOnCompletion(checkMark()),
 		progressbar.OptionShowCount(),
