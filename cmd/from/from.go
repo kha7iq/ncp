@@ -16,14 +16,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type flagsDir struct {
+type nfsFlags struct {
 	nfsHost        string
 	nfsMountFolder string
 }
 
 // FromServer function provides functionaltiy to transfer files or folders from NFS server to local filesystem.
 func FromServer() *cli.Command {
-	var nfsOpts flagsDir
+	var nfsOpts nfsFlags
 	return &cli.Command{
 		Name:  "from",
 		Usage: "The 'from' command is used to copy files or folders from Remote NFS server to local machine.",
@@ -38,7 +38,7 @@ func FromServer() *cli.Command {
 				Destination: &nfsOpts.nfsMountFolder,
 				Name:        "nfspath",
 				Aliases:     []string{"p"},
-				Usage:       "The NFS path denotes the destination directory on the NFS server where files will be copied to.",
+				Usage:       "The NFS path denotes the destination directory on the NFS server where files/folders will be copied from.",
 			},
 		},
 		Action: func(ctx *cli.Context) error {
@@ -108,6 +108,7 @@ func checkMark() func() {
 	}
 }
 
+// transferFile will take a source file path and target file path and transfer file
 func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	sourceFile, err := nfs.Open(srcfile)
@@ -196,6 +197,7 @@ func createDirIfNotExist(path string) error {
 	return nil
 }
 
+// listFileAndFolders take a directory path and returns a slice containng files and another containing folders
 func listFilesAndFolders(v *nfs.Target, dir string) ([]string, []string, error) {
 	outDirs, err := v.ReadDirPlus(dir)
 	if err != nil {
@@ -224,6 +226,8 @@ func listFilesAndFolders(v *nfs.Target, dir string) ([]string, []string, error) 
 	return dirs, files, nil
 }
 
+// isDirectory takes a path strings and check the attirbutes if givin path
+// is a dirctory or not
 func isDirectory(v *nfs.Target, dir string) bool {
 	outDirs, _ := v.ReadDirPlus(dir)
 	for _, outDir := range outDirs {
