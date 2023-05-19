@@ -16,7 +16,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type nfsFlags struct {
+type nfsConfg struct {
 	inputPath      string
 	nfsHost        string
 	nfsMountFolder string
@@ -24,35 +24,42 @@ type nfsFlags struct {
 
 // ToServer function provides functionaltiy to transfer files or folders from local filesystem to NFS server.
 func ToServer() *cli.Command {
-	var nfsOpts nfsFlags
+	var nc nfsConfg
 	return &cli.Command{
-		Name: "to",
-		// Aliases: []string{"d"},
-		Usage: "The 'to' command is used to copy files or folders from the local machine to NFS server.",
+		Name:      "to",
+		Usage:     "The 'to' command is used to copy files or folders from the local machine to NFS server.",
+		UsageText: "ncp to --host 192.168.0.80 --nfspath data --input src",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Destination: &nfsOpts.inputPath,
+				Destination: &nc.inputPath,
 				Name:        "input",
+				Required:    true,
 				Aliases:     []string{"i"},
 				Usage:       "Input refers to the specific location of a folder or file that will be transferred.",
 			},
 
 			&cli.StringFlag{
-				Destination: &nfsOpts.nfsHost,
+				Destination: &nc.nfsHost,
 				Name:        "host",
 				Aliases:     []string{"t"},
-				Usage:       "The IP address or DNS of the NFS server specifies the IP or hostname that can be used to access the NFS server.",
+				Required:    true,
+				Usage:       "IP address or DNS of the NFS server specifies the IP or hostname that can be used to access the NFS server.",
 			},
 			&cli.StringFlag{
-				Destination: &nfsOpts.nfsMountFolder,
+				Destination: &nc.nfsMountFolder,
+				Required:    true,
 				Name:        "nfspath",
 				Aliases:     []string{"p"},
-				Usage:       "The NFS path denotes the destination directory on the NFS server where files will be copied to.",
+				Usage:       "NFS path denotes the destination directory on the NFS server where files will be copied to.",
 			},
 		},
 		Action: func(ctx *cli.Context) error {
-			basePath := filepath.Dir(nfsOpts.inputPath)
-			mount, err := nfs.DialMount(nfsOpts.nfsHost, false)
+			u := ctx.Int("uid")
+			g := ctx.Int("gid")
+			uid, gid := checkUID(u, g)
+
+			basePath := filepath.Dir(nc.inputPath)
+			mount, err := nfs.DialMount(nc.nfsHost, false)
 			if err != nil {
 				log.Fatalf("unable to dial MOUNT service: %v", err)
 			}
@@ -60,9 +67,9 @@ func ToServer() *cli.Command {
 
 			hostNameLocal, _ := os.Hostname()
 
-			auth := rpc.NewAuthUnix(hostNameLocal, 0, 0)
+			auth := rpc.NewAuthUnix(hostNameLocal, uid, gid)
 
-			nfs, err := mount.Mount(nfsOpts.nfsMountFolder, auth.Auth())
+			nfs, err := mount.Mount(nc.nfsMountFolder, auth.Auth())
 			if err != nil {
 				log.Fatalf("unable to mount volume: %v", err)
 			}
@@ -74,7 +81,7 @@ func ToServer() *cli.Command {
 
 			mount.Close()
 
-			folders, files, err := getFoldersAndFiles(nfsOpts.inputPath, "")
+			folders, files, err := getFoldersAndFiles(nc.inputPath, "")
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -248,4 +255,15 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	progress.Finish()
 	return nil
+}
+
+func checkUID(u int, g int) (uid, gid uint32) {
+	if u == 0 {
+		uid = uint32(0)
+		gid = uint32(0)
+	} else {
+		uid = uint32(u)
+		gid = uint32(g)
+	}
+	return uid, gid
 }

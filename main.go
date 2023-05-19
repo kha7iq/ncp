@@ -20,10 +20,23 @@ var (
 func main() {
 	app := cli.NewApp()
 	app.Name = "ncp"
+	app.Flags = []cli.Flag{
+		&cli.IntFlag{
+			Name:    "uid",
+			Aliases: []string{"u"},
+			Usage:   "UID can be utilized to perform the write operations.",
+		},
+		&cli.IntFlag{
+			Name:    "gid",
+			Aliases: []string{"g"},
+			Usage:   "GID can be utilized to perform the write operations.",
+		},
+	}
 	app.Version = version + " BuildDate: " + buildDate + " " + " CommitSHA: " + commitSHA
-	app.Usage = "NCP provides a straightforward and efficient way to handle file transfers between the local machine and the NFS server."
-	app.Description = `It is used to efficiently copy files to and from an NFS server.
-It provides a convenient way to transfer files between the local machine and the NFS server, supporting both upload and download operations.`
+	app.Usage = "provides a straightforward and efficient way to handle file transfers between the local machine and a NFS server."
+	app.Description = `NCP is used to efficiently copy files to and from an NFS server.
+It provides a convenient way to transfer files between the local machine and the NFS server,
+supporting both upload and download operations.`
 	app.Commands = []*cli.Command{
 		to.ToServer(),
 		from.FromServer(),

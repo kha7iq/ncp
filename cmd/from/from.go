@@ -16,37 +16,43 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type nfsFlags struct {
+type nfsConfg struct {
 	nfsHost        string
 	nfsMountFolder string
 }
 
 // FromServer function provides functionaltiy to transfer files or folders from NFS server to local filesystem.
 func FromServer() *cli.Command {
-	var nfsOpts nfsFlags
+	var nc nfsConfg
 	return &cli.Command{
-		Name:  "from",
-		Usage: "The 'from' command is used to copy files or folders from Remote NFS server to local machine.",
+		Name:      "from",
+		Usage:     "The 'from' command is used to copy files or folders from Remote NFS server to local machine.",
+		UsageText: "ncp to --host 192.168.0.80 --nfspath data/tee",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Destination: &nfsOpts.nfsHost,
+				Destination: &nc.nfsHost,
 				Name:        "host",
 				Aliases:     []string{"t"},
+				Required:    true,
 				Usage:       "The IP address or DNS of the NFS server specifies the IP or hostname that can be used to access the NFS server.",
 			},
 			&cli.StringFlag{
-				Destination: &nfsOpts.nfsMountFolder,
+				Destination: &nc.nfsMountFolder,
 				Name:        "nfspath",
+				Required:    true,
 				Aliases:     []string{"p"},
 				Usage:       "The NFS path denotes the destination directory on the NFS server where files/folders will be copied from.",
 			},
 		},
 		Action: func(ctx *cli.Context) error {
+			u := ctx.Int("uid")
+			g := ctx.Int("gid")
+			uid, gid := checkUID(u, g)
 
-			rootDir := filepath.Dir(nfsOpts.nfsMountFolder)
-			dir := filepath.Base(nfsOpts.nfsMountFolder)
+			rootDir := filepath.Dir(nc.nfsMountFolder)
+			dir := filepath.Base(nc.nfsMountFolder)
 
-			mount, err := nfs.DialMount(nfsOpts.nfsHost, false)
+			mount, err := nfs.DialMount(nc.nfsHost, false)
 			if err != nil {
 				log.Fatalf("unable to dial MOUNT service: %v", err)
 			}
@@ -54,7 +60,7 @@ func FromServer() *cli.Command {
 
 			hostNameLocal, _ := os.Hostname()
 
-			auth := rpc.NewAuthUnix(hostNameLocal, 0, 0)
+			auth := rpc.NewAuthUnix(hostNameLocal, uid, gid)
 
 			nfs, err := mount.Mount(rootDir, auth.Auth())
 			if err != nil {
@@ -239,4 +245,15 @@ func isDirectory(v *nfs.Target, dir string) bool {
 	}
 
 	return false
+}
+
+func checkUID(u int, g int) (uid, gid uint32) {
+	if u == 0 {
+		uid = uint32(0)
+		gid = uint32(0)
+	} else {
+		uid = uint32(u)
+		gid = uint32(g)
+	}
+	return uid, gid
 }
