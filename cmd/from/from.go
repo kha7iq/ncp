@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-nfs/nfsv3/nfs"
 	"github.com/go-nfs/nfsv3/nfs/rpc"
-	"github.com/go-nfs/nfsv3/nfs/util"
 	"github.com/schollz/progressbar/v3"
 	"github.com/urfave/cli/v2"
 )
@@ -27,7 +26,7 @@ func FromServer() *cli.Command {
 	return &cli.Command{
 		Name:      "from",
 		Usage:     "The 'from' command is used to copy files or folders from Remote NFS server to local machine.",
-		UsageText: "ncp to --host 192.168.0.80 --nfspath data/tee",
+		UsageText: "ncp from --host 192.168.0.80 --nfspath data/src",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Destination: &nc.nfsHost,
@@ -78,30 +77,25 @@ func FromServer() *cli.Command {
 
 				dirs, files, err := listFilesAndFolders(nfs, dir)
 				if err != nil {
-					log.Fatalf("failed to list files and folders: %v", err)
+					log.Fatalf("unable to get list of files and folders %v", err)
 				}
 				for _, v := range dirs {
 					if err = createDirIfNotExist(v); err != nil {
-						return err
+						log.Fatalf("fail to create folder %V", err)
 					}
 				}
 
 				for _, sf := range files {
 					if err = transferFile(nfs, sf, sf); err != nil {
-						log.Fatalf("fail")
-
+						log.Fatalf("fail to copy files with error %V", err)
 					}
 				}
-
 			}
-
 			if !isDirectory(nfs, dir) {
 
 				if err = transferFile(nfs, dir, dir); err != nil {
-					log.Fatalf("fail")
-
+					log.Fatalf("fail to transfer files %v", err)
 				}
-
 			}
 			return nil
 		},
@@ -116,13 +110,11 @@ func checkMark() func() {
 
 // transferFile will take a source file path and target file path and transfer file
 func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
-
 	sourceFile, err := nfs.Open(srcfile)
 	if err != nil {
-		util.Errorf("error opening source file: %s", err.Error())
+		log.Fatalf("error opening source file: %s", err.Error())
 		return err
 	}
-
 	// Calculate the ShaSum
 	h := sha256.New()
 	t := io.TeeReader(sourceFile, h)
@@ -136,7 +128,6 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 		Saucer:        "[yellow]▖[reset][cyan]",
 		SaucerPadding: " ",
 	}
-
 	progress := progressbar.NewOptions64(
 		size,
 		progressbar.OptionEnableColorCodes(true),
@@ -153,7 +144,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	wr, err := os.Create(targetfile)
 	if err != nil {
-		util.Errorf("error opening target file: %s", err.Error())
+		log.Fatalf("error opening target file: %s", err.Error())
 		return err
 	}
 	defer wr.Close()
@@ -161,7 +152,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	// Copy files with progress size
 	n, err := io.CopyN(wr, io.TeeReader(t, progress), int64(size))
 	if err != nil {
-		util.Errorf("error copying: n=%d, %s", n, err.Error())
+		log.Fatalf("error copying: n=%d, %s", n, err.Error())
 		return err
 	}
 	expectedSum := h.Sum(nil)
@@ -169,7 +160,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	// Get the file we wrote and calculate the sum
 	rdr, err := nfs.Open(targetfile)
 	if err != nil {
-		util.Errorf("error opening target file for verification: %v", err)
+		log.Fatalf("error opening target file for verification: %v", err)
 		return err
 	}
 	defer rdr.Close()
@@ -179,7 +170,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	_, err = io.Copy(io.Discard, t) // Discard the content since we only need the sum
 	if err != nil {
-		util.Errorf("error reading target file for verification: %v", err)
+		log.Fatalf("error reading target file for verification: %v", err)
 		return err
 	}
 	actualSum := h.Sum(nil)
@@ -187,7 +178,6 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	if !bytes.Equal(actualSum, expectedSum) {
 		log.Fatalf("[Verification Error] Actual SHA=%x Expected SHA=%s", actualSum, expectedSum)
 	}
-
 	progress.Finish()
 	return nil
 }
@@ -209,7 +199,6 @@ func listFilesAndFolders(v *nfs.Target, dir string) ([]string, []string, error) 
 	if err != nil {
 		return nil, nil, err
 	}
-
 	var dirs []string
 	var files []string
 
@@ -243,10 +232,11 @@ func isDirectory(v *nfs.Target, dir string) bool {
 			}
 		}
 	}
-
 	return false
 }
 
+// checkUID will check the int to see if a value is provided via
+// flags and convert it to uint32 and returns the values
 func checkUID(u int, g int) (uid, gid uint32) {
 	if u == 0 {
 		uid = uint32(0)
