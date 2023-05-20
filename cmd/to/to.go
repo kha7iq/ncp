@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-nfs/nfsv3/nfs"
 	"github.com/go-nfs/nfsv3/nfs/rpc"
-	"github.com/go-nfs/nfsv3/nfs/util"
 	"github.com/schollz/progressbar/v3"
 	"github.com/urfave/cli/v2"
 )
@@ -74,16 +73,14 @@ func ToServer() *cli.Command {
 				log.Fatalf("unable to mount volume: %v", err)
 			}
 			defer nfs.Close()
-
 			if err = mount.Unmount(); err != nil {
-				log.Fatalf("unable to unmount target: %v", err)
+				log.Fatalf("nable to unmount target: %v", err)
 			}
-
 			mount.Close()
 
 			folders, files, err := getFoldersAndFiles(nc.inputPath, "")
 			if err != nil {
-				log.Fatal(err)
+				log.Fatalf("unable to get list of files and folders %v", err)
 			}
 			for _, v := range folders {
 				_, err = nfs.Mkdir(v, os.ModePerm)
@@ -91,14 +88,12 @@ func ToServer() *cli.Command {
 				if err == os.ErrExist {
 					err = nil
 				}
-
 			}
 			for _, targetfile := range files {
 				sf := filepath.Join(basePath, targetfile)
 				// Copy file to destination
 				if err = transferFile(nfs, sf, targetfile); err != nil {
-					log.Fatalf("fail")
-
+					log.Fatalf("fail to transfer files %v", err)
 				}
 			}
 			return nil
@@ -151,19 +146,17 @@ func getFoldersAndFiles(path string, basePath string) ([]string, []string, error
 	if err != nil {
 		return nil, nil, err
 	}
-
 	for _, contentPath := range contents {
 		// Check if the content is a directory
 		isDir, err := isDirectory(contentPath)
 		if err != nil {
-			log.Println(err)
+			log.Fatalf("can not check dir/file attributes %v", err)
 			continue
 		}
-
 		if isDir {
 			subfolderFolders, subfolderFiles, err := getFoldersAndFiles(contentPath, filepath.Join(basePath, folderName))
 			if err != nil {
-				log.Println(err)
+				log.Fatalf("unable to get list %v", err)
 				continue
 			}
 
@@ -175,7 +168,6 @@ func getFoldersAndFiles(path string, basePath string) ([]string, []string, error
 			files = append(files, filePath)
 		}
 	}
-
 	return folders, files, nil
 }
 
@@ -184,8 +176,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	sourceFile, err := os.Open(srcfile)
 	if err != nil {
-		util.Errorf("error opening source file: %s", err.Error())
-		return err
+		log.Fatalf("error opening source file: %s", err.Error())
 	}
 
 	// Calculate the ShaSum
@@ -218,7 +209,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	wr, err := nfs.OpenFile(targetfile, os.ModePerm)
 	if err != nil {
-		util.Errorf("error opening target file: %s", err.Error())
+		log.Fatalf("error opening target file: %s", err.Error())
 		return err
 	}
 	defer wr.Close()
@@ -226,7 +217,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	// Copy files with progress size
 	n, err := io.CopyN(wr, io.TeeReader(t, progress), int64(size))
 	if err != nil {
-		util.Errorf("error copying: n=%d, %s", n, err.Error())
+		log.Fatalf("error copying: n=%d, %s", n, err.Error())
 		return err
 	}
 	expectedSum := h.Sum(nil)
@@ -234,7 +225,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	// Get the file we wrote and calculate the sum
 	rdr, err := nfs.Open(targetfile)
 	if err != nil {
-		util.Errorf("error opening target file for verification: %v", err)
+		log.Fatalf("error opening target file for verification: %v", err)
 		return err
 	}
 	defer rdr.Close()
@@ -244,7 +235,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	_, err = io.Copy(io.Discard, t) // Discard the content since we only need the sum
 	if err != nil {
-		util.Errorf("error reading target file for verification: %v", err)
+		log.Fatalf("error reading target file for verification: %v", err)
 		return err
 	}
 	actualSum := h.Sum(nil)
@@ -257,6 +248,8 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	return nil
 }
 
+// checkUID will check the int to see if a value is provided via
+// flags and convert it to uint32 and returns the values
 func checkUID(u int, g int) (uid, gid uint32) {
 	if u == 0 {
 		uid = uint32(0)
