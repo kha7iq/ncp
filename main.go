@@ -24,12 +24,12 @@ func main() {
 		&cli.IntFlag{
 			Name:    "uid",
 			Aliases: []string{"u"},
-			Usage:   "UID can be utilized to perform the write operations.",
+			Usage:   "UID is a globally applicable flag that can be utilized for write operations.",
 		},
 		&cli.IntFlag{
 			Name:    "gid",
 			Aliases: []string{"g"},
-			Usage:   "GID can be utilized to perform the write operations.",
+			Usage:   "GID is a globally applicable flag that can be utilized for write operations.",
 		},
 	}
 	app.Version = version + " BuildDate: " + buildDate + " " + " CommitSHA: " + commitSHA
