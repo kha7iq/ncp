@@ -8,7 +8,6 @@
    <a href="https://goreportcard.com/report/github.com/kha7iq/ncp">
    <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/kha7iq/ncp">
    <a href="#">
-   <img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/kha7iq/ncp">
    <a href="https://github.com/kha7iq/ncp/issues">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/kha7iq/ncp?style=flat-square&logo=github&logoColor=white">
    <a href="https://github.com/kha7iq/ncp/blob/master/LICENSE.md">
@@ -33,9 +32,11 @@ NCP is a file transfer utility that enables efficient copying of files to and fr
 - Multi-architecture binaries available for installation (e.g., .deb, apk, rpm)
 - Compatible with Windows and macOS operating systems
 - Option to specify UID and GID for write operations using a global flag
+- Display upload and download speeds in real-time.
+- Show the elapsed time for write operations.
+- Show total file size
 
-<img style="border:0.5px solid silver;" alt="NCP" src="./.github/img/ncp.gif" width="800" />
-
+<img alt="NCP" src="./.github/img/ncp.gif" width="800" />
 
 
 ## Installation
