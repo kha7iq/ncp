@@ -150,7 +150,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	defer wr.Close()
 
 	// Copy files with progress size
-	n, err := io.CopyN(wr, io.TeeReader(t, progress), int64(size))
+	n, err := io.CopyN(wr, io.TeeReader(t, progress), size)
 	if err != nil {
 		log.Fatalf("error copying: n=%d, %s", n, err.Error())
 		return err
