@@ -88,6 +88,9 @@ func ToServer() *cli.Command {
 				if err == os.ErrExist {
 					err = nil
 				}
+				if err != nil {
+					return err // But return all other errors
+				}
 			}
 			for _, targetfile := range files {
 				sf := filepath.Join(basePath, targetfile)
@@ -215,7 +218,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 	defer wr.Close()
 
 	// Copy files with progress size
-	n, err := io.CopyN(wr, io.TeeReader(t, progress), int64(size))
+	n, err := io.CopyN(wr, io.TeeReader(t, progress), size)
 	if err != nil {
 		log.Fatalf("error copying: n=%d, %s", n, err.Error())
 		return err
