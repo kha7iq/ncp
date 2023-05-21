@@ -107,7 +107,7 @@ func checkMark() func() {
 	}
 }
 
-// isDirectory takes a path strings and check the attirbutes if givin path
+// isDirectory takes a path strings and check the attributes if givin path
 // is a dirctory or not
 func isDirectory(path string) (bool, error) {
 	info, err := os.Stat(path)

@@ -221,7 +221,7 @@ func listFilesAndFolders(v *nfs.Target, dir string) ([]string, []string, error) 
 	return dirs, files, nil
 }
 
-// isDirectory takes a path strings and check the attirbutes if givin path
+// isDirectory takes a path strings and check the attributes if givin path
 // is a dirctory or not
 func isDirectory(v *nfs.Target, dir string) bool {
 	outDirs, _ := v.ReadDirPlus(dir)
