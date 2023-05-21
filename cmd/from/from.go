@@ -125,7 +125,7 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	// Customize the progress bar theme
 	theme := progressbar.Theme{
-		Saucer:        "[yellow]▖[reset][cyan]",
+		Saucer:        "\x1b[38;5;215m▖[reset][cyan]",
 		SaucerPadding: " ",
 	}
 	progress := progressbar.NewOptions64(
