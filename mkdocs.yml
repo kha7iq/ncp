@@ -1,0 +1,49 @@
+site_name: Documentation
+site_url: https://ncp.lmno.pk
+repo_url: https://github.com/kha7iq/ncp
+theme:
+  name: 'material'
+  font:
+    text: 'Ubuntu'
+    code: 'Ubuntu Mono'
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: light
+      accent: 'amber'
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      accent: 'amber'
+      toggle: 
+        icon: material/weather-sunny
+        name: Switch to light mode
+extra:
+  social:
+    - icon: 'fontawesome/brands/github'
+      link: 'https://github.com/kha7iq'
+    - icon: 'fontawesome/brands/twitter'
+      link: 'https://twitter.com/kha7iq'
+    - icon: 'fontawesome/solid/fire'
+      link: 'https://ncp.lmno.pk/'
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - footnotes
+  - mdx_include:
+      base_path: docs
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+extra_css:
+  - stylesheets/extra.css
