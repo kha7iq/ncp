@@ -10,7 +10,7 @@
    <a href="#">
    <a href="https://github.com/kha7iq/ncp/issues">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/kha7iq/ncp?style=flat-square&logo=github&logoColor=white">
-   <a href="https://github.com/kha7iq/ncp/blob/master/LICENSE.md">
+   <a href="https://github.com/kha7iq/ncp/blob/master/LICENSE">
    <img alt="License" src="https://img.shields.io/github/license/kha7iq/ncp">
 </p>
 
