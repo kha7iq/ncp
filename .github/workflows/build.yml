@@ -48,6 +48,7 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          AUR_KEY: '${{ secrets.AUR_KEY }}'
   
       - name: Notify on failure
         uses: kha7iq/pingme-action@v1
