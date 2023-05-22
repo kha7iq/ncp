@@ -43,6 +43,7 @@ func FromServer() *cli.Command {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
+			truncate := ctx.Bool("turncate")
 			u := ctx.Int("uid")
 			g := ctx.Int("gid")
 			uid, gid := helper.CheckUID(u, g)
@@ -85,14 +86,14 @@ func FromServer() *cli.Command {
 				}
 
 				for _, sf := range files {
-					if err = transferFile(nfs, sf, sf); err != nil {
+					if err = transferFile(nfs, sf, sf, truncate); err != nil {
 						log.Fatalf("fail to copy files with error %V", err)
 					}
 				}
 			}
 			if !isDirectory(nfs, dir) {
 
-				if err = transferFile(nfs, dir, dir); err != nil {
+				if err = transferFile(nfs, dir, dir, truncate); err != nil {
 					log.Fatalf("fail to transfer files %v", err)
 				}
 			}
@@ -102,7 +103,8 @@ func FromServer() *cli.Command {
 }
 
 // transferFile will take a source and target file path along with *nfs.Targe to transfer file
-func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
+func transferFile(nfs *nfs.Target, srcfile string, targetfile string, truncate bool) error {
+	var filePath string
 	sourceFile, err := nfs.Open(srcfile)
 	if err != nil {
 		log.Fatalf("error opening source file: %s", err.Error())
@@ -116,9 +118,13 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	defer sourceFile.Close()
 
-	turncatedFilePath := helper.TruncateFileName(srcfile)
+	if !truncate {
+		filePath = srcfile
+	} else {
+		filePath = helper.TruncateFileName(srcfile)
+	}
 
-	progress := helper.ProgressBar(size, turncatedFilePath, helper.CheckMark())
+	progress := helper.ProgressBar(size, filePath, helper.CheckMark())
 
 	wr, err := os.Create(targetfile)
 	if err != nil {
