@@ -46,7 +46,7 @@ NCP is a file transfer utility that enables efficient copying of files to and fr
 
 
 <details>
-    <summary>DEB & RPM</summary>
+    <summary>Linux</summary>
 
 ```bash
 # DEB
@@ -56,6 +56,13 @@ sudo dpkg -i ncp_amd64.deb
 # RPM
 sudo rpm -i ncp_amd64.rpm
 ```
+- AUR
+```bash
+yay -S ncp-bin
+
+pamac install ncp-bin
+```
+
 </details>
 
 <details>
@@ -65,6 +72,25 @@ sudo rpm -i ncp_amd64.rpm
 scoop bucket add ncp https://github.com/kha7iq/scoop-bucket.git
 scoop install ncp
 ```
+</details>
+
+<details>
+    <summary>Bash Install Script</summary>
+
+
+By default, ncp is going to be installed at `/usr/bin/`. Sudo privileges are required for this operation.
+
+If you would like to provide a custom install path, you can do so as an input to the script. 
+For example, you can run `./install.sh $HOME/bin` to install ncp in the specified directory.
+
+```bash
+curl -s https://raw.githubusercontent.com/kha7iq/ncp/master/install.sh | sudo sh
+```
+or
+```bash
+curl -sL https://bit.ly/installncp | sudo sh
+```
+
 </details>
 
 <details>
