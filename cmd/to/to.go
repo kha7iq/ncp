@@ -3,7 +3,6 @@ package to
 import (
 	"bytes"
 	"crypto/sha256"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -11,7 +10,7 @@ import (
 
 	"github.com/go-nfs/nfsv3/nfs"
 	"github.com/go-nfs/nfsv3/nfs/rpc"
-	"github.com/schollz/progressbar/v3"
+	"github.com/kha7iq/ncp/internal/helper"
 	"github.com/urfave/cli/v2"
 )
 
@@ -55,7 +54,7 @@ func ToServer() *cli.Command {
 		Action: func(ctx *cli.Context) error {
 			u := ctx.Int("uid")
 			g := ctx.Int("gid")
-			uid, gid := checkUID(u, g)
+			uid, gid := helper.CheckUID(u, g)
 
 			basePath := filepath.Dir(nc.inputPath)
 			mount, err := nfs.DialMount(nc.nfsHost, false)
@@ -101,12 +100,6 @@ func ToServer() *cli.Command {
 			}
 			return nil
 		},
-	}
-}
-
-func checkMark() func() {
-	return func() {
-		fmt.Printf("%s ✔ %s\n", "\033[32m", "\033[0m")
 	}
 }
 
@@ -174,7 +167,7 @@ func getFoldersAndFiles(path string, basePath string) ([]string, []string, error
 	return folders, files, nil
 }
 
-// transferFile will take a source file path and target file path and transfer file
+// transferFile will take a source and target file path along with *nfs.Targe to transfer file
 func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	sourceFile, err := os.Open(srcfile)
@@ -190,25 +183,9 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	defer sourceFile.Close()
 
-	// Customize the progress bar theme
-	theme := progressbar.Theme{
-		Saucer:        "\x1b[38;5;215m▖[reset][cyan]",
-		SaucerPadding: " ",
-	}
+	turncatedFilePath := helper.TruncateFileName(srcfile)
 
-	progress := progressbar.NewOptions64(
-		size,
-		progressbar.OptionEnableColorCodes(true),
-		progressbar.OptionSetTheme(theme),
-		progressbar.OptionSetDescription("Copying"+" "+"[green]"+srcfile+"[reset]"),
-		progressbar.OptionSetWidth(20),
-		progressbar.OptionShowBytes(true),
-		progressbar.OptionOnCompletion(checkMark()),
-		progressbar.OptionShowCount(),
-		progressbar.OptionShowElapsedTimeOnFinish(),
-		progressbar.OptionSetPredictTime(false),
-		progressbar.OptionSpinnerType(14),
-	)
+	progress := helper.ProgressBar(size, turncatedFilePath, helper.CheckMark())
 
 	wr, err := nfs.OpenFile(targetfile, os.ModePerm)
 	if err != nil {
@@ -249,17 +226,4 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	progress.Finish()
 	return nil
-}
-
-// checkUID will check the int to see if a value is provided via
-// flags and convert it to uint32 and returns the values
-func checkUID(u int, g int) (uid, gid uint32) {
-	if u == 0 {
-		uid = uint32(0)
-		gid = uint32(0)
-	} else {
-		uid = uint32(u)
-		gid = uint32(g)
-	}
-	return uid, gid
 }
