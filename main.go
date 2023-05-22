@@ -31,6 +31,13 @@ func main() {
 			Aliases: []string{"g"},
 			Usage:   "GID is a globally applicable flag that can be utilized for write operations.",
 		},
+		&cli.BoolFlag{
+			Name:    "turncate",
+			Aliases: []string{"tr"},
+			Usage:   "Enable or disable truncation of long file names in progress bar",
+			Value:   true,
+			EnvVars: []string{"NCP_FILENAME_TURNICATE"},
+		},
 	}
 	app.Version = version + " BuildDate: " + buildDate + " " + " CommitSHA: " + commitSHA
 	app.Usage = "provides a straightforward and efficient way to handle file transfers between the local machine and a NFS server."
