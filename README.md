@@ -159,7 +159,9 @@ at the [contributing guide](https://github.com/kha7iq/ncp/blob/master/CONTRIBUTI
 
 If you encounter any problems or have suggestions for improvements, please [open an issue](https://github.com/username/repo/issues) on GitHub.
 
-
 ### License
 
 NCP is licensed under the MIT License. Please note that it may use third-party libraries that have their own separate licenses. Refer to the individual licenses of those libraries for more information.
+
+---
+**If you find this project useful, give it a**  ⭐️
