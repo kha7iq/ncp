@@ -47,3 +47,17 @@ For example, to copy the `src` folder recursively from the NFS server with the I
 ```bash
 ncp from --host 192.168.0.80 --nfspath data/src
 ```
+
+## File Name Truncation Option for Displaying Full Paths
+
+**Description:**
+The global flag `--truncate=false` provides a convenient way to disable file name truncation. By using this flag, the full path of the file names being transferred can be displayed without any truncation.
+
+**Usage:**
+To include the global flag `--truncate=false` in your command, follow the syntax below:
+
+```
+ncp --truncate=false from --host 192.168.0.80 --nfspath data/src 
+```
+**Default Value:**
+By default, the `--truncate` flag is set to `true`, enabling file name truncation during file transfers. However, you have the flexibility to customize this behavior by exporting the environment variable `NCP_FILENAME_TRUNCATE` with your desired value or via flag.
