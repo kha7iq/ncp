@@ -52,6 +52,7 @@ func ToServer() *cli.Command {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
+			truncate := ctx.Bool("turncate")
 			u := ctx.Int("uid")
 			g := ctx.Int("gid")
 			uid, gid := helper.CheckUID(u, g)
@@ -94,7 +95,7 @@ func ToServer() *cli.Command {
 			for _, targetfile := range files {
 				sf := filepath.Join(basePath, targetfile)
 				// Copy file to destination
-				if err = transferFile(nfs, sf, targetfile); err != nil {
+				if err = transferFile(nfs, sf, targetfile, truncate); err != nil {
 					log.Fatalf("fail to transfer files %v", err)
 				}
 			}
@@ -168,8 +169,8 @@ func getFoldersAndFiles(path string, basePath string) ([]string, []string, error
 }
 
 // transferFile will take a source and target file path along with *nfs.Targe to transfer file
-func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
-
+func transferFile(nfs *nfs.Target, srcfile string, targetfile string, turnication bool) error {
+	var filePath string
 	sourceFile, err := os.Open(srcfile)
 	if err != nil {
 		log.Fatalf("error opening source file: %s", err.Error())
@@ -183,9 +184,13 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string) error {
 
 	defer sourceFile.Close()
 
-	turncatedFilePath := helper.TruncateFileName(srcfile)
+	if !turnication {
+		filePath = srcfile
+	} else {
+		filePath = helper.TruncateFileName(srcfile)
+	}
 
-	progress := helper.ProgressBar(size, turncatedFilePath, helper.CheckMark())
+	progress := helper.ProgressBar(size, filePath, helper.CheckMark())
 
 	wr, err := nfs.OpenFile(targetfile, os.ModePerm)
 	if err != nil {
