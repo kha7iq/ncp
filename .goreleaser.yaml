@@ -33,7 +33,7 @@ checksum:
 changelog:
   sort: 'asc'
   filters:
-    exclude: ['^docs:', '^test:', 'Merge pull request', 'Merge branch', 'go mod tidy']
+    exclude: ['^docs:', '^chore:', '^test:', 'Merge pull request', 'Merge branch', 'go mod tidy']
 
 archives:
 - name_template: >-
@@ -90,6 +90,9 @@ aurs:
   license: MIT
   private_key: '{{ .Env.AUR_KEY }}'
   git_url: 'ssh://aur@aur.archlinux.org/ncp-bin.git'
+  commit_author:
+      name: Abdul Khaliq
+      email: a.khaliq@outlook.my
   package: |-
     # bin
     install -Dm755 "./ncp" "${pkgdir}/usr/bin/ncp"
