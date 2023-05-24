@@ -49,7 +49,7 @@ func FromServer() *cli.Command {
 			uid, gid := helper.CheckUID(u, g)
 
 			rootDir := filepath.Dir(nc.nfsMountFolder)
-			dir := filepath.Base(nc.nfsMountFolder)
+			basePath := filepath.Base(nc.nfsMountFolder)
 
 			mount, err := nfs.DialMount(nc.nfsHost, false)
 			if err != nil {
@@ -72,28 +72,28 @@ func FromServer() *cli.Command {
 			}
 
 			mount.Close()
+			if isDirectory(nfs, basePath) {
 
-			if isDirectory(nfs, dir) {
-
-				dirs, files, err := listFilesAndFolders(nfs, dir)
+				dirs, files, err := listFilesAndFolders(nfs, basePath)
 				if err != nil {
 					log.Fatalf("unable to get list of files and folders %v", err)
+				}
+				if len(dirs) == 0 {
+					dirs = append(dirs, basePath)
 				}
 				for _, v := range dirs {
 					if err = createDirIfNotExist(v); err != nil {
 						log.Fatalf("fail to create folder %V", err)
 					}
 				}
-
 				for _, sf := range files {
 					if err = transferFile(nfs, sf, sf, truncate); err != nil {
 						log.Fatalf("fail to copy files with error %V", err)
 					}
 				}
 			}
-			if !isDirectory(nfs, dir) {
-
-				if err = transferFile(nfs, dir, dir, truncate); err != nil {
+			if !isDirectory(nfs, basePath) {
+				if err = transferFile(nfs, basePath, basePath, truncate); err != nil {
 					log.Fatalf("fail to transfer files %v", err)
 				}
 			}
@@ -134,9 +134,9 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string, truncate b
 	defer wr.Close()
 
 	// Copy files with progress size
-	n, err := io.CopyN(wr, io.TeeReader(t, progress), size)
+	wrBytes, err := io.CopyN(wr, io.TeeReader(t, progress), size)
 	if err != nil {
-		log.Fatalf("error copying: n=%d, %s", n, err.Error())
+		log.Fatalf("error copying file: written bytes=%d, %s", wrBytes, err.Error())
 		return err
 	}
 	expectedSum := h.Sum(nil)
@@ -205,16 +205,17 @@ func listFilesAndFolders(v *nfs.Target, dir string) ([]string, []string, error) 
 	return dirs, files, nil
 }
 
-// isDirectory takes a path strings and check the attributes if givin path
-// is a dirctory or not
+// isDirectory takes a path string and checks if the given path is a directory or not on NFS server
 func isDirectory(v *nfs.Target, dir string) bool {
-	outDirs, _ := v.ReadDirPlus(dir)
-	for _, outDir := range outDirs {
-		if outDir.Name() != "." && outDir.Name() != ".." {
-			if outDir.IsDir() {
-				return true
-			}
-		}
+	// Get the attributes of the path
+	attr, _, err := v.GetAttr(dir)
+	if err != nil {
+		log.Println("error getting directory attributes:", err)
+		return false
 	}
+	if attr.IsDir() {
+		return true
+	}
+
 	return false
 }
