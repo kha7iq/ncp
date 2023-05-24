@@ -104,16 +104,6 @@ func ToServer() *cli.Command {
 	}
 }
 
-// isDirectory takes a path strings and check the attributes if givin path
-// is a dirctory or not
-func isDirectory(path string) (bool, error) {
-	info, err := os.Stat(path)
-	if err != nil {
-		return false, err
-	}
-	return info.IsDir(), nil
-}
-
 // listFileAndFolders take a directory path and returns a slice containng files and another containing folders
 func getFoldersAndFiles(path string, basePath string) ([]string, []string, error) {
 	var folders []string
@@ -231,4 +221,14 @@ func transferFile(nfs *nfs.Target, srcfile string, targetfile string, turnicatio
 
 	progress.Finish()
 	return nil
+}
+
+// isDirectory takes a path strings and check the attributes if givin path
+// is a dirctory or not
+func isDirectory(path string) (bool, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false, err
+	}
+	return info.IsDir(), nil
 }

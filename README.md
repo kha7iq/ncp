@@ -30,14 +30,12 @@ NCP is a file transfer utility that enables efficient copying of files to and fr
 
 ## Features
 
-- Easy file transfer to and from an NFS server
+- Easy upload transfer to and from an NFS server
 - Support for upload and download operations
 - Multi-architecture binaries available for installation (e.g deb, apk, rpm, exe)
 - Compatible with Windows and macOS operating systems
 - Option to specify UID and GID for write operations using a global flag
-- Display upload and download speeds in real-time.
-- Show the elapsed time for write operations.
-- Show total file size
+- Display upload and download speeds, file size and elapsed time for write operations.
 
 <img alt="NCP" src="./.github/img/ncp.gif" width="800" />
 
