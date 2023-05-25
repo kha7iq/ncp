@@ -6,6 +6,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/go-nfs/nfsv3 v0.0.3 h1:YOBa1PHAEzpQ26lXbTy8yHlvmr3VnQtKb9BwKfNtjU4=
 github.com/go-nfs/nfsv3 v0.0.3/go.mod h1:ofJyXGrEZwQlMB1lR+1daUzR/5jl6jdWlzFmnAcBWQc=
 github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213/go.mod h1:vNUNkEQ1e29fT/6vq2aBdFsgNPmy8qMdSay1npru+Sw=
+github.com/kha7iq/go-nfs-client v1.0.0 h1:fZ84vsHGqhM+5H6CTVa5Y9rPTRptYuqQUQhDJeB1bUA=
+github.com/kha7iq/go-nfs-client v1.0.0/go.mod h1:8rff/CrV/Z6WSiCHjKjzqmT36k+zYTW0zOg2K/8Y0+I=
 github.com/mattn/go-isatty v0.0.17/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-runewidth v0.0.14 h1:+xnbZSEeDbOIg5/mE6JF0w6n9duR1l3/WmbinWVwUuU=
 github.com/mattn/go-runewidth v0.0.14/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=

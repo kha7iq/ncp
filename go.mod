@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/go-nfs/nfsv3 v0.0.3
+	github.com/kha7iq/go-nfs-client v1.0.0
 	github.com/schollz/progressbar/v3 v3.13.1
 	github.com/urfave/cli/v2 v2.25.3
 )
