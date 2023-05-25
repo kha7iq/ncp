@@ -24,6 +24,6 @@ jobs:
         uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
-          args: goreleaser release --skip-publish --clean --config .github/choco/release.yaml
+          args: release --skip-publish --clean --config .github/choco/release.yaml
         env:
           CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
