@@ -66,7 +66,7 @@ func ToServerV4() *cli.Command {
 				Destination: &nc.nfsServerPort,
 				Name:        "port",
 				Aliases:     []string{"pr"},
-				Usage:       "Nfs server port.",
+				Usage:       "NFS server port, if other then default.",
 				Value:       "2049",
 			},
 		},
