@@ -24,12 +24,12 @@
 
 # NCP (NFS Copy)
 
-NCP is a file transfer utility that enables efficient copying of files to and from an NFS server. It offers a convenient way to transfer files between your local machine and an NFS server, supporting both upload and download operations.
+NCP offers a user-friendly solution for efficiently transferring files and folders between your local machine
+and the NFS server. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.
 
-:loudspeaker: *Note ncp only supports NFSv3*
 
 ## Features
-
+- :sparkles: Support for NFS **v3** and NFS **v4**
 - Easy upload transfer to and from an NFS server
 - Support for upload and download operations
 - Multi-architecture binaries available for installation (e.g deb, apk, rpm, exe)
@@ -142,8 +142,14 @@ docker run khaliq/ncp:latest
 ### Copying Files/Folders to NFS Server
 
 To copy the `_local/src` folder to the NFS server with the IP address `192.168.0.80` and the NFS path `data`, use the following command:
+
+- NFS v3
 ```bash
-ncp to --host 192.168.0.80 --nfspath data --input /src/backup.tar.gz
+ncp to  --input /src/backup.tar.gz --nfspath data --host 192.168.0.80
+```
+- NFS v4
+```bash
+ncp v4to --input /src/backup.tar.gz --nfspath data/backup --host 192.168.0.80
 ```
 See [Usage Documentation](https://ncp.lmno.pk/02-usage/) for more details
 

@@ -4,8 +4,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/kha7iq/ncp/cmd/from"
-	"github.com/kha7iq/ncp/cmd/to"
+	"github.com/kha7iq/ncp/cmd/nfs3/from"
+	"github.com/kha7iq/ncp/cmd/nfs3/to"
+	"github.com/kha7iq/ncp/cmd/nfs4/v4from"
+	"github.com/kha7iq/ncp/cmd/nfs4/v4to"
+	"github.com/kha7iq/ncp/internal/helper"
 	"github.com/urfave/cli/v2"
 )
 
@@ -39,14 +42,15 @@ func main() {
 			EnvVars: []string{"NCP_FILENAME_TURNICATE"},
 		},
 	}
-	app.Version = version + " BuildDate: " + buildDate + " " + " CommitSHA: " + commitSHA
+	app.Version = version + " BuildDate: " + buildDate + " " + " CommitSHA: " + helper.TrimSHA(commitSHA)
 	app.Usage = "provides a straightforward and efficient way to handle file transfers between the local machine and a NFS server."
-	app.Description = `NCP is used to efficiently copy files to and from an NFS server.
-It provides a convenient way to transfer files between the local machine and the NFS server,
-supporting both upload and download operations.`
+	app.Description = `NCP offers a user-friendly solution for efficiently transferring files and folders between your local machine
+and the NFS server. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.`
 	app.Commands = []*cli.Command{
-		to.ToServer(),
-		from.FromServer(),
+		to.ToServerV3(),
+		from.FromServerV3(),
+		v4to.ToServerV4(),
+		v4from.FromServerV4(),
 	}
 
 	err := app.Run(os.Args)
