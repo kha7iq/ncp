@@ -15,7 +15,9 @@ builds:
   - amd64
   flags:
     - -trimpath
-
+release: 
+  disable: true
+  
 chocolateys:
 - name: ncp
   owners: Abdul Khaliq
