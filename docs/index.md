@@ -6,19 +6,18 @@
 
 # NCP (NFS Copy)
 
-NCP is a file transfer utility that enables efficient copying of files to and from an NFS server. It offers a convenient way to transfer files between your local machine and an NFS server, supporting both upload and download operations.
+NCP offers a user-friendly solution for efficiently transferring files and folders between your local machine
+and the NFS server. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.
 
-*Note ncp only supports NFSv3*
 ## Features
-
+- :sparkles: Support for NFS **v3** and NFS **v4**
 - Easy file transfer to and from an NFS server
 - Support for upload and download operations
 - Multi-architecture binaries available for installation (e.g. deb, apk, rpm)
 - Compatible with Windows and macOS operating systems
 - Option to specify UID and GID for write operations using a global flag
-- Display upload and download speeds in real-time.
-- Show the elapsed time for write operations.
-- Show total file size
+- Display upload and download speeds, file size and elapsed time for write operations.
+
 
 <img alt="NCP" src="https://raw.githubusercontent.com/kha7iq/ncp/master/.github/img/ncp.gif" width="800" />
 
