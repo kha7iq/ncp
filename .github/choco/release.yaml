@@ -22,7 +22,7 @@ chocolateys:
   title: NFS Copy
   authors: Abdul Khaliq
   project_url: https://ncp.lmno.pk
-  icon_url: 'https://github.com/kha7iq/ncp/'
+  icon_url: 'https://rawcdn.githack.com/kha7iq/ncp/216bb0ef4dfbc08bdb046f289d744cacf7bb79e5/.github/img/ncpicon.png'
   license_url: https://github.com/kha7iq/ncp/blob/master/LICENSE
   project_source_url: https://github.com/kha7iq/ncp
   docs_url: https://ncp.lmno.pk
