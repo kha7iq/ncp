@@ -2,6 +2,7 @@ package helper
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -70,4 +71,24 @@ func CheckMark() func() {
 	return func() {
 		fmt.Printf("%s ✔ %s\n", "\033[32m", "\033[0m")
 	}
+}
+
+// IsPathValid checks if a file or directory exists at the given path.
+// It returns true if the path exists, false if it doesn't exist, and an error if any issue occurs during the check.
+func IsPathValid(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	} else if os.IsNotExist(err) {
+		return false, err
+	} else {
+		return false, err
+	}
+}
+
+//  TrimSAH
+
+func TrimSHA(commitSHA string) string {
+	shortSHA := commitSHA[:12]
+	return shortSHA
 }
