@@ -1,0 +1,51 @@
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+  - go mod tidy
+gomod:
+  proxy: false
+
+builds:
+- env:
+    - CGO_ENABLED=0
+  goos:
+  - windows
+  goarch:
+  - amd64
+  flags:
+    - -trimpath
+
+chocolateys:
+- name: ncp
+  owners: Abdul Khaliq
+  title: NFS Copy
+  authors: Abdul Khaliq
+  project_url: https://ncp.lmno.pk
+  icon_url: 'https://github.com/kha7iq/ncp/'
+  license_url: https://github.com/kha7iq/ncp/blob/master/LICENSE
+  project_source_url: https://github.com/kha7iq/ncp
+  docs_url: https://ncp.lmno.pk
+  bug_tracker_url: https://github.com/kha7iq/ncp/issues
+  release_notes: "https://github.com/kha7iq/ncp/releases/tag/v{{ .Version }}"
+  summary: Effortlessly transfer files and folders, to and from your NFS server.
+  description: |
+    # NCP (NFS Copy)
+
+    NCP offers a user-friendly solution for efficiently transferring files and folders between your local machine
+    and the NFS server. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.
+
+    ## Features
+    - Support for NFS **v3** and NFS **v4**
+    - Easy upload transfer to and from an NFS server
+    - Support for upload and download operations
+    - Multi-architecture binaries available for installation (e.g deb, apk, rpm, exe)
+    - Compatible with Windows and macOS operating systems
+    - Option to specify UID and GID for write operations using a global flag
+    - Display upload and download speeds, file size and elapsed time for write operations.
+
+    ```bash
+    ncp --help
+    ```
+  api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
+
