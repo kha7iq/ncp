@@ -86,9 +86,11 @@ func IsPathValid(path string) (bool, error) {
 	}
 }
 
-//  TrimSAH
-
+// TrimSAH will check the commit and if its not empty trim.
 func TrimSHA(commitSHA string) string {
-	shortSHA := commitSHA[:12]
-	return shortSHA
+	if len(commitSHA) > 0 {
+		shortSHA := commitSHA[:12]
+		return shortSHA
+	}
+	return ""
 }
