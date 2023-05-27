@@ -15,7 +15,6 @@ import (
 // Version variables are used for semVer
 var (
 	version   string
-	buildDate string
 	commitSHA string
 )
 
@@ -42,7 +41,7 @@ func main() {
 			EnvVars: []string{"NCP_FILENAME_TURNICATE"},
 		},
 	}
-	app.Version = version + " BuildDate: " + buildDate + " " + " CommitSHA: " + helper.TrimSHA(commitSHA)
+	app.Version = version + " CommitSHA: " + helper.TrimSHA(commitSHA)
 	app.Usage = "provides a straightforward and efficient way to handle file transfers between the local machine and a NFS server."
 	app.Description = `NCP offers a user-friendly solution for efficiently transferring files and folders between your local machine
 and the NFS server. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.`
