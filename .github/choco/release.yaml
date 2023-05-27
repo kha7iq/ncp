@@ -15,6 +15,21 @@ builds:
   - amd64
   flags:
     - -trimpath
+  mod_timestamp: '{{ .CommitTimestamp }}'
+  ldflags:
+    - -s -w -X main.version={{ .Version }} -X main.commitSHA={{.Commit}}
+archives:
+- name_template: >-
+    {{ .ProjectName }}_
+    {{- title .Os }}_
+    {{- if eq .Arch "amd64" }}x86_64
+    {{- else if eq .Arch "386" }}i386
+    {{- else }}{{ .Arch }}{{ end }}
+  format_overrides:
+  - goos: windows
+    format: zip
+  rlcp: true
+
 release: 
   disable: true
   
@@ -29,7 +44,7 @@ chocolateys:
   project_source_url: https://github.com/kha7iq/ncp
   docs_url: https://ncp.lmno.pk
   bug_tracker_url: https://github.com/kha7iq/ncp/issues
-  release_notes: "https://github.com/kha7iq/ncp/releases/tag/v{{ .Version }}"
+  release_notes: 'https://github.com/kha7iq/ncp/releases/tag/v{{ .Version }}'
   summary: Effortlessly transfer files and folders, to and from your NFS server.
   description: |
     # NCP (NFS Copy)
@@ -50,4 +65,5 @@ chocolateys:
     ncp --help
     ```
   api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
+  tags: 'ncp network nfs3 nfs4 copy upload'
 
