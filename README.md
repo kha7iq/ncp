@@ -145,11 +145,11 @@ To copy the `_local/src` folder to the NFS server with the IP address `192.168.0
 
 - NFS v3
 ```bash
-ncp to  --input /src/backup.tar.gz --nfspath data --host 192.168.0.80
+ncp to  --input _local/src --nfspath data --host 192.168.0.80
 ```
 - NFS v4
 ```bash
-ncp v4to --input /src/backup.tar.gz --nfspath data/backup --host 192.168.0.80
+ncp v4to --input _local/src --nfspath data --host 192.168.0.80
 ```
 See [Usage Documentation](https://ncp.lmno.pk/02-usage/) for more details
 
