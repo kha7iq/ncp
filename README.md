@@ -66,6 +66,11 @@ pamac install ncp-bin
 <details>
     <summary>Windows</summary>
 
+- Chocolatey
+```bash
+choco install ncp
+```
+- Scoop
 ```bash
 scoop bucket add ncp https://github.com/kha7iq/scoop-bucket.git
 scoop install ncp
