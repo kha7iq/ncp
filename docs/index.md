@@ -17,6 +17,7 @@ and the NFS server. It enables seamless recursive upload and download operations
 - Compatible with Windows and macOS operating systems
 - Option to specify UID and GID for write operations using a global flag
 - Display upload and download speeds, file size and elapsed time for write operations.
+- Copy a Single file or recursively copy an Entire folder.
 
 
 <img alt="NCP" src="https://raw.githubusercontent.com/kha7iq/ncp/master/.github/img/ncp.gif" width="800" />
