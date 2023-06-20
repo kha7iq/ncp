@@ -25,13 +25,12 @@
 # NCP (NFS Copy)
 
 NCP offers a user-friendly solution for efficiently transferring files and folders between your local machine
-and the NFS server. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.
+and the NFS server without mounting the volume. It enables seamless recursive upload and download operations, supporting both NFS v3 and NFS V4 protocols.
 
 
 ## Features
 - :sparkles: Support for NFS **v3** and NFS **v4**
-- Easy upload transfer to and from an NFS server
-- Support for upload and download operations
+- Easy file transfer to and from an NFS server without mounting volume.
 - Multi-architecture binaries available for installation (e.g deb, apk, rpm, exe)
 - Compatible with Windows and macOS operating systems
 - Option to specify UID and GID for write operations using a global flag
@@ -172,6 +171,3 @@ If you encounter any problems or have suggestions for improvements, please [open
 ### License
 
 NCP is licensed under the MIT License. Please note that it may use third-party libraries that have their own separate licenses. Refer to the individual licenses of those libraries for more information.
-
----
-**If you find this project useful, give it a**  ⭐️
