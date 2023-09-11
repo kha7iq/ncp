@@ -8,6 +8,8 @@
    <a href="https://goreportcard.com/report/github.com/kha7iq/ncp">
    <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/kha7iq/ncp">
    <a href="#">
+    <a href="https://github.com/agarrharr/awesome-cli-apps#file-syncsharing">
+   <img alt="Awesome" src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg">
    <a href="https://github.com/kha7iq/ncp/issues">
    <img alt="GitHub issues" src="https://img.shields.io/github/issues/kha7iq/ncp?style=flat-square&logo=github&logoColor=white">
    <a href="https://github.com/kha7iq/ncp/blob/master/LICENSE">
