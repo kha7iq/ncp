@@ -211,7 +211,7 @@ func transferFile(nfs4 *nfs4.NfsClient, srcfile string, targetfile string, turni
 	}
 
 	// Call the nfs4.WriteFile function with the correct arguments
-	_, err = nfs4.WriteFile(targetfile, true, uint64(fileSize), reader)
+	_, err = nfs4.WriteFile(targetfile, true, 0, reader)
 	if err != nil {
 		return fmt.Errorf("failed to create destination file: %w", err)
 	}
